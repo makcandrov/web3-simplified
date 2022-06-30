@@ -1,0 +1,48 @@
+{
+    "ethereum": {
+        "public": "https://rpc.ankr.com/eth"
+    },
+    "goerli": {
+        "public": "https://api-goerli.etherscan.io/",
+        "infura": "https://goerli.infura.io/v3/"
+    },
+    "kovan": {
+        "public": "https://api-kovan.etherscan.io/",
+        "infura": "https://kovan.infura.io/v3/"
+    },
+    "rinkeby": {
+        "public": "https://api-rinkeby.etherscan.io/",
+        "infura": "https://rinkeby.infura.io/v3/"
+    },
+    "ropsten": {
+        "public": "https://api-ropsten.etherscan.io/",
+        "infura": "https://ropsten.infura.io/v3/"
+    },
+    "sepolia": {
+        "public": "https://api-sepolia.etherscan.io/"
+    },
+    "bsc": {
+        "public": "https://bsc-dataseed.binance.org/"
+    },
+    "avalanche": {
+        "public": "https://api.avax.network/ext/bc/C/rpc"
+    },
+    "fuji": {
+        "public": "https://api.avax-test.network/ext/bc/C/rpc"
+    },
+    "polygon": {
+        "public": "https://polygon-rpc.com/"
+    },
+    "fantom": {
+        "public": "https://rpcapi.fantom.network/"
+    },
+    "opera": {
+        "public": "https://rpc.testnet.fantom.network/"
+    },
+    "cronos": {
+        "public": "https://evm.cronos.org"
+    },
+    "optimism": {
+        "public": "https://mainnet.optimism.io"
+    }
+}

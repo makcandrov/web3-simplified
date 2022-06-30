@@ -1,0 +1,10 @@
+{
+    "cdai": {
+        "ethereum": "0x5d3a536e4d6dbd6114cc1ead35777bab948e3643"
+    },
+    "contract2": {
+        "ethereum": "0x0",
+        "ropsten": "0x0",
+        "goerli": "0x0"
+    }
+}
