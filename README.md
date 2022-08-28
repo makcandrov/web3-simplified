@@ -41,7 +41,7 @@ In this file, you will sort your RPCs by network, and you can give them the name
     "address": "0x",
     "key": "0x"
 },
-"vitalik": {
+"my-friend": {
     "public": "0x"
 }
 ```
@@ -94,7 +94,12 @@ w.setProvider("ethereum", "public");
 Many settings are available, that you can change directly from your javascript file, but only one is mandatory to do almost everything: [`setProvider`](#setprovider).
 
 - [setBlockCall](#setblockcall)
+- [setConfirmations](#setconfirmations)
+- [setGasPriceUnit](#setgaspriceûnit)
 - [setProvider](#setprovider)
+- [setRecaps](#setrecaps)
+- [setReceipts](#setreceipts)
+- [setValueUnit](#setvalueunit)
 
 ---
 
@@ -113,14 +118,42 @@ Sets the block in whitch to perform all the next calls.
 ##### **Example**
 
 ```javascript
-setBlockCall(10000000);
+w.setBlockCall(10000000);
 ```
+---
+
+#### **setConfirmations**
+
+```javascript
+setConfirmations(value);
+```
+
+Specify if you want confirmation messages before any send to a smart contract. By defaut, it is set to `false`, no confirmation message appear.
+
+##### **Parameters**
+
+- `value` — `true` if you want confirmations messages, else `false`.
+
+##### **Example**
+
+```javascript
+// enable confirmation messages
+w.setConfirmations(true);
+
+// disable confirmation messages
+w.setConfirmations(false);
+```
+
+---
+
+#### **setGasPriceUnit**
+
 ---
 
 #### **setProvider**
 
 ```javascript
-w.setProvider(network, name);
+setProvider(network, name);
 ```
 
 Sets the provider (and so the network) that will be used for all the future interactions with the blockchain.
@@ -138,14 +171,43 @@ w.setProvider("etehereum", "public");
 
 ---
 
+#### **setRecaps**
+
+---
+
+#### **setReceipts**
+
+---
+
+#### **setValueUnit**
+
+---
+
 ### Interactions
 
 The power of `web3-simplified` relies in how easy it is to make transactions to the blockchain or to retrive data stored on it. Usually, you want to perform a [`call`](#call), to get an information from a smart contract without making a transaction, or a `send`, to initiate a transaction. But this library also provides many other handy functions to make some actions easier, as sending multiple transactions at once, or accessing the value in a contract storage. Also, almost all functions that return result as a promise have a "print" version that only prints the result in the terminal when the promise is resolved, instead of returning it. For example, [`printCall`](#printcall) is the "print" version of [`call`](#call).
 
+- [balance](#balance)
 - [call](#call)
+- [currentBlock](#currentblock)
+- [deploy](#deploy)
+- [mappingValue](#mappingvalue)
+- [mappingValueSlot](#mappingvalueslot)
+- [multiSend](#multisend)
 - [nonce](#nonce)
+- [printBalance](#printbalance)
 - [printCall](#printcall)
+- [printMappingValue](#printmappingvalue)
+- [printNonce](#printnonce)
+- [printStorage](#printstorage)
 - [send](#send)
+- [storage](#storage)
+- [transfer](#transfer)
+
+---
+
+#### **balance**
+
 ---
 
 #### **call**
@@ -183,6 +245,26 @@ let myTokenBalance = await w.call(
 
 ---
 
+#### **currentBlock**
+
+---
+
+#### **deploy**
+
+---
+
+#### **mappingValue**
+
+---
+
+#### **mappingValueSlot**
+
+---
+
+#### **multiSend**
+
+---
+
 #### **nonce**
 
 ```javascript
@@ -207,10 +289,14 @@ let myNonce = await w.nonce("me");
 
 ---
 
+#### **printBalance**
+
+---
+
 #### **printCall**
 
 ```javascript
-async printCall(contract, functionName, args, returns, from)
+printCall(contract, functionName, args, returns, from)
 ```
 
 Prints the response of the call to a smart contract.
@@ -237,6 +323,34 @@ w.printCall(
 
 ---
 
+#### **printMappingValue**
+
+---
+
+#### **printNonce**
+
+```javascript
+printNonce(account)
+```
+
+Prints the nonce of an address (number of transactions if it is an EOA, number of contract deployed if it is a contract).
+
+##### **Parameters**
+
+- `account` — Address or its alias in `w-accounts.json` or in `w-contracts.json`
+
+##### **Example**
+
+```javascript
+let myNonce = await w.nonce("me");
+```
+
+---
+
+#### **printStorage**
+
+---
+
 #### **send**
 
 ```javascript
@@ -254,7 +368,7 @@ Sends a transaction to a smart contact or an account address.
 - `value` — Value to send to the function if it is payable. The value is unit set by the function w.setValueUnit(), by default it is 'ether'.  
 - `gasLimit` — Gas limit to the transaction.
 - `gasPrice` — Gas price of the transaction. The value is unit set by the function w.setGasPriceUnit(), by default it is 'gwei'.
-- `nonce` — Nonce of the transaction. If not specified, the nonce is set so that the transaction will be the next to be sent. If you want to set a relative nonce (to send the transaction after x transactions), you can give as parameter w.$rel(x).
+- `nonce` — Nonce of the transaction. If not specified, the nonce is set so that the transaction will be the next to be sent. If you want to set a relative nonce (to send the transaction after x transactions), you can give as parameter` w.$rel(x)`.
 
 ##### **Returns**
 
@@ -263,6 +377,7 @@ Sends a transaction to a smart contact or an account address.
 ##### **Example**
 
 ```javascript
+// send with no nonc specified, the transaction will your next transaction
 w.send(
     "me", "nft-contract", "safeTransfer", [
         // if "my-friend" exists in `w-contracts` or `w-accounts`, this will work as expected. You could also put a real address.
@@ -270,6 +385,32 @@ w.send(
         ["uint256", "111"]
     ], 0, 150000, 35
 );
+
+// send with a nonce of 12 specified, the transaction will be your 12th transaction ever.
+w.send(
+    "me", "nft-contract", "safeTransfer", [
+        // if "my-friend" exists in `w-contracts` or `w-accounts`, this will work as expected. You could also put a real address.
+        ["address", "my-friend"], 
+        ["uint256", "112"]
+    ], 0, 150000, 35, 12
+);
+
+// send with a relative nonce of 2 specified, this transaction will be effective after 2 other transactions.
+w.send(
+    "me", "nft-contract", "safeTransfer", [
+        // if "my-friend" exists in `w-contracts` or `w-accounts`, this will work as expected. You could also put a real address.
+        ["address", "my-friend"], 
+        ["uint256", "113"]
+    ], 0, 150000, 35, w.$rel(2)
+);
 ```
+
+---
+
+#### **storage**
+
+---
+
+#### **transfer**
 
 ---
