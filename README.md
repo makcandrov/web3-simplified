@@ -93,6 +93,8 @@ w.setProvider("ethereum", "public");
 
 Many settings are available, that you can change directly from your javascript file, but only one is mandatory to do almost everything: [`setProvider`](#setprovider).
 
+---
+
 #### **setBlockCall**
 
 ```javascript
@@ -100,7 +102,6 @@ setBlockCall(block);
 ```
 
 Sets the block in whitch to perform the next call.
-     * @param {String} block The block in whitch to perform the next call.
 
 ##### **Parameters**
 
@@ -111,22 +112,96 @@ Sets the block in whitch to perform the next call.
 ```javascript
 setBlockCall(10000000);
 ```
+---
 
 #### **setProvider**
 
 ```javascript
-setProvider(network, name);
+w.setProvider(network, name);
 ```
 
 Sets the provider (and so the network) that will be used for all the future interactions with the blockchain.
 
 ##### **Parameters**
 
-`network` — Network of the new provider, should appear in `providers.json`  
-`name` — Alias of the new provider in `providers.json` for the given network
+`network` — Network of the new provider, should appear in `w-providers.json`  
+`name` — Alias of the new provider in `w-providers.json` for the given network
 
 ##### **Example**
 
 ```javascript
-setProvider("etehereum", "public");
+w.setProvider("etehereum", "public");
 ```
+
+---
+
+### Interactions
+
+The power of `web3-simplified` is how easy it is to make transactions to the blockchain or to retrive data stored on it. Usually, you want to perform a [`call`](#call), to get an information from a smart contract without making a transaction, or a `send`, to initiate a transaction. But this library also provides many other handy functions to make some actions easier, as sending multiple transactions at a time, or accessing the value in a contract storage. Also, almost all functions that return result as a promise have a "print" version that only prints the result in the terminal when the promise is resolved, instead of returning it. For example, [`printCall`](#printcall) is the "print" version of [`call`](#call).
+
+---
+
+#### **call**
+
+```javascript
+async call(contract, functionName, args, returns, from)
+```
+
+Returns the response of the call to a smart contract.
+
+##### **Parameters**
+
+- `contract` -  Address of the contract or its alias in `w-contracts.json`.  
+- `functionName` - Name of the function to call.  
+- `args` - Arguments to encode, as an array of `[type, value]` tuples. If there is only one argument to encode, it can be `args = [type, value]`.  
+- `returns` - Types returned by the function. If not specified it won't decode the output
+- `from` - Address of the caller or his alias in `w-accounts.json` or in `w-contracts.json`. Can be `null` or `undefined`.
+
+##### **Returns**
+
+`Promise` Response of the call
+
+##### **Example**
+
+```javascript
+let myTokenBalance = await w.call(
+    "token",
+    "balanceOf",
+    // if "me" exists in `w-contracts` or `w-accounts`, this will work as expected. You could also put a real address.
+    ["address", "me"],
+    "uint256"
+    // from has no importance here, it can be omitted
+);
+```
+
+---
+
+#### **printCall**
+
+```javascript
+async printCall(contract, functionName, args, returns, from)
+```
+
+Prints the response of the call to a smart contract.
+
+##### **Parameters**
+
+- `contract` -  Address of the contract or its alias in `w-contracts.json`.  
+- `functionName` - Name of the function to call.  
+- `args` - Arguments to encode, as an array of `[type, value]` tuples. If there is only one argument to encode, it can be `args = [type, value]`.  
+- `returns` - Types returned by the function. If not specified it won't decode the output
+- `from` - Address of the caller or his alias in `w-accounts.json` or in `w-contracts.json`. Can be `null` or `undefined`.
+
+##### **Example**
+
+```javascript
+w.printCall(
+    "uniswap-pair",
+    "getReserves",
+    [],
+    ["uint112", "uint112", "uint32"]
+    // from has no importance here, it can be omitted
+);
+```
+
+---

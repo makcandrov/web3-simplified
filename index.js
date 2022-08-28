@@ -330,8 +330,8 @@ class W {
 
     /**
      * Switches provider 
-     * @param {string} network Network of the new provider, should appear in `providers.json`
-     * @param {string} name Alias of the new provider in `providers.json` for the given network
+     * @param {string} network Network of the new provider, should appear in `w-providers.json`
+     * @param {string} name Alias of the new provider in `w-providers.json` for the given network
      */
     setProvider(network, name) {
         let networkProviders = this.providers[network];
@@ -460,13 +460,14 @@ class W {
     }
 
     /**
-     * @notice Returns the response of the call to the smart contract.
+     * @notice Returns the response of the call to a smart contract.
      * @param {string} contract Address of the contract or its alias in `w-contracts.json`
      * @param {string} functionName Name of the function to call
      * @param {string[][]} args Arguments to encode, as an array of `[type, value]` tuples.
      * If there is only one argument to encode, it can be `args = [type, value]`
      * @param {string[]} returns Types returned by the function. If not specified it won't decode the output
      * @param {string} from Address of the caller or his alias in `w-accounts.json` or in `w-contracts.json`
+     * Can be `null` or `undefined`.
      * @returns {Promise} Response of the call
      */
     async call(contract, functionName, args, returns, from) {

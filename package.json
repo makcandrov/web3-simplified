@@ -1,6 +1,6 @@
 {
   "name": "web3-simplified",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An easier way to use web3.",
   "main": "index.js",
   "repository": "https://github.com/makcandrov/web3-simplified",
