@@ -1,0 +1,17 @@
+{
+  "name": "web3-simplified",
+  "version": "0.0.1",
+  "description": "An easier way to use web3.",
+  "main": "index.js",
+  "dependencies": {
+    "solc": "0.8.16",
+    "web3": "1.7.5",
+    "web3-simplified": "^0.0.1"
+  },
+  "keywords": [
+    "web3",
+    "javascript"
+  ],
+  "author": "makcandrov <makcandrov@proton.me>",
+  "license": "GPL-3.0"
+}
