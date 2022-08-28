@@ -27,7 +27,7 @@ function askConfirmation(message) {
 
 /**
  * Does the same as `assert`, but prints the error in red.
- * @param {boolan} value 
+ * @param {boolean} value 
  * @param {message} message 
  */
 function assertRed(value, message) {
@@ -976,7 +976,7 @@ class W {
      * @param {int | string} slot Slot of the mapping, as an integer or hexadecimal string.
      * @param {*} key Key of the mapping, with the format `[type, value]`.
      */
-     printMappingValue(contract, slot, key, returns) {
+    printMappingValue(contract, slot, key, returns) {
         this.mappingValue(contract, slot, key, returns).then(console.log);
     }
 
