@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "An easier way to use web3.",
   "main": "index.js",
+  "repository": "https://github.com/makcandrov/web3-simplified",
   "dependencies": {
     "solc": "0.8.16",
     "web3": "1.7.5",
