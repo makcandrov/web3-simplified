@@ -56,15 +56,15 @@ function typeAssertion(value, type) {
  */
 function colorize(message, color) {
     switch (color) {
-        case 'black'   : return `\x1b[30m${message}\x1b[0m`;
-        case 'red'     : return `\x1b[31m${message}\x1b[0m`;
-        case 'green'   : return `\x1b[32m${message}\x1b[0m`;
-        case 'yellow'  : return `\x1b[33m${message}\x1b[0m`;
-        case 'blue'    : return `\x1b[34m${message}\x1b[0m`;
-        case 'magenta' : return `\x1b[35m${message}\x1b[0m`;
-        case 'cyan'    : return `\x1b[36m${message}\x1b[0m`;
-        case 'white'   : return `\x1b[37m${message}\x1b[0m`;
-        default        : return message;
+        case 'black': return `\x1b[30m${message}\x1b[0m`;
+        case 'red': return `\x1b[31m${message}\x1b[0m`;
+        case 'green': return `\x1b[32m${message}\x1b[0m`;
+        case 'yellow': return `\x1b[33m${message}\x1b[0m`;
+        case 'blue': return `\x1b[34m${message}\x1b[0m`;
+        case 'magenta': return `\x1b[35m${message}\x1b[0m`;
+        case 'cyan': return `\x1b[36m${message}\x1b[0m`;
+        case 'white': return `\x1b[37m${message}\x1b[0m`;
+        default: return message;
     }
 }
 
@@ -84,7 +84,7 @@ class W {
         let parentPaths = module.parent.paths.map((path) => {
             return path.slice(0, - 'node_modules'.length);
         });
-        
+
         let foundConfiguration = false;
         let i = 0;
         while (!foundConfiguration && i < parentPaths.length) {
@@ -93,15 +93,15 @@ class W {
             let providersPath = parentPaths[i] + 'w-providers.json';
             try {
                 this.accounts = this.accounts || require(accountsPath);
-            } catch {}
+            } catch { }
 
             try {
                 this.contracts = this.contracts || require(contractsPath);
-            } catch {}
+            } catch { }
 
             try {
                 this.providers = this.providers || require(providersPath);
-            } catch {}
+            } catch { }
 
             foundConfiguration = this.accounts && this.contracts && this.providers;
             i++;
@@ -115,7 +115,7 @@ class W {
         this.MILLIETHER = 'milliether';
         this.MICROETHER = 'microether';
         this.GWEI = 'gwei';
-        this.WEI= 'wei';
+        this.WEI = 'wei';
 
         this.provider = null;
         this.web3 = null;
@@ -199,7 +199,7 @@ class W {
      * Its default value is `true`.
      * @returns {string} Address corresponding to the given account.
      */
-    _accountsAliasesHandler(account, validityCheck=true) {
+    _accountsAliasesHandler(account, validityCheck = true) {
         let accountAddress = null;
         if (validityCheck && this._isAddress(account)) {
             if (this._isValidAddress(account)) {
@@ -207,7 +207,7 @@ class W {
             } else {
                 accountAddress = this._toValidAddress(account);
             }
-        } else if(this.accounts && this.accounts[account]) {
+        } else if (this.accounts && this.accounts[account]) {
             accountAddress = this.accounts[account].address;
         }
         return accountAddress;
@@ -222,7 +222,7 @@ class W {
      * Its default value is `true`.
      * @returns {string} Address corresponding to the given contract.
      */
-    _contractsAliasesHandler(contract, validityCheck=true) {
+    _contractsAliasesHandler(contract, validityCheck = true) {
         let contractAddress = null;
         if (validityCheck && this._isAddress(contract)) {
             if (this._isValidAddress(contract)) {
@@ -246,7 +246,7 @@ class W {
      * checks accounts first.
      * @returns {string} Address corresponding to the given alias.
      */
-    _aliasesHandler(alias, order='ac') {
+    _aliasesHandler(alias, order = 'ac') {
         let address = null;
         if (this._isAddress(alias)) {
             if (this._isValidAddress(alias)) {
@@ -254,7 +254,7 @@ class W {
             } else {
                 address = this._toValidAddress(alias);
             }
-        } else if(order === 'ca') {
+        } else if (order === 'ca') {
             address = this._contractsAliasesHandler(alias, false) || this._accountsAliasesHandler(alias, false);
         } else {
             address = this._accountsAliasesHandler(alias, false) || this._contractsAliasesHandler(alias, false);
@@ -267,7 +267,7 @@ class W {
      * @param {string[]} types Types of the arguments of the function
      * @returns Function selector
      */
-    _selector(functionName, types=null) {
+    _selector(functionName, types = null) {
         this._web3Assertion();
         let toEncode = functionName + '(';
         if (types && types.length > 0) {
@@ -296,7 +296,7 @@ class W {
      * If there is only one argument to encode, it can be `args = [type, value]`
      * @returns {string} The encoded data
      */
-    _encodeData(functionName, args=null) {
+    _encodeData(functionName, args = null) {
         let argsTypes = [];
         let argsValues = [];
         if (args && args.length !== 0) {
@@ -318,7 +318,7 @@ class W {
                 }
             }
         }
-        
+
         return this._selector(functionName, argsTypes) + this._encodeArgs(argsTypes, argsValues).slice(2);
     }
 
@@ -373,7 +373,7 @@ class W {
      * It won't prevent the transaction from being sent. By defaut, it is set to `false`.
      * @param {bool} value `true` if you want transaction summaries, else `false`.
      */
-     setRecaps(value) {
+    setRecaps(value) {
         typeAssertion(value, 'boolean');
         this.recaps = value;
     }
@@ -383,7 +383,7 @@ class W {
      * By defaut, it is set to `true`.
      * @param {bool} value `true` if you want receipts, else `false`.
      */
-     setReceipts(value) {
+    setReceipts(value) {
         typeAssertion(value, 'boolean');
         this.receipts = value;
     }
@@ -409,8 +409,8 @@ class W {
     }
 
     /**
-     * Sets the block in whitch to perform the next call.
-     * @param {String} block The block in whitch to perform the next call.
+     * Sets the block in whitch to perform all the next calls.
+     * @param {String} block The block in whitch to perform all the next calls.
      */
     setBlockCall(block) {
         this.blockCall = block;
@@ -427,7 +427,7 @@ class W {
     }
 
     /**
-     * @notice Converts `gas` from the unit set by `setGasPriceUnit`. By default, the unit is `'gwei'`.
+     * Converts `gas` from the unit set by `setGasPriceUnit`. By default, the unit is `'gwei'`.
      * @param {integer} value Gas to convert
      * @returns The converted amount
      */
@@ -437,22 +437,23 @@ class W {
     }
 
     /**
+     * Returns the nonce of an address (number of transactions if it is an EOA, number of contract deployed if it is a contract).
      * @param {string} account Address or its alias in `w-accounts.json` or in `w-contracts.json`
-     * @returns {Promise} Number of transactions of the address.
+     * @returns {Promise} Nonce of the address.
      */
     async nonce(account) {
         this._web3Assertion();
         let accountAddress = this._aliasesHandler(account);
         assertRed(
             accountAddress,
-            'Unknown alias (neither in `w-accounts.json` nor in `w-contracts.json`) or invalid address.' 
+            'Unknown alias (neither in `w-accounts.json` nor in `w-contracts.json`) or invalid address.'
             + '\nGiven : ' + account
         );
         return this.web3.eth.getTransactionCount(accountAddress);
     }
 
     /**
-     * Prints the number of transactions of an address.
+     * Prints the nonce of an address (number of transactions if it is an EOA, number of contract deployed if it is a contract).
      * @param {string} account Address or its alias in `w-accounts.json` or in `w-contracts.json`
      */
     printNonce(account) {
@@ -499,7 +500,7 @@ class W {
         let encodedResult = await this.web3.eth.call(options, this.blockCall);
         return returns ? this._decode(encodedResult, returns) : encodedResult;
     }
-    
+
     /**
      * @notice Prints the response of the call to the smart contract.
      * @param {string} contract Address of the contract or its alias in `w-contracts.json`.
@@ -593,7 +594,7 @@ class W {
         this._accountsAssertion();
         let transaction = await this.prepareTransaction(from, to, functionName, args, value, gasLimit, gasPrice, nonce)
         let fromAccount = transaction.from;
-        transaction = {...transaction, from: fromAccount.address};
+        transaction = { ...transaction, from: fromAccount.address };
 
         let [isRel, decodedNonce] = this.#decode$rel(transaction.nonce);
         if (transaction.nonce) {
@@ -622,10 +623,10 @@ class W {
             let result = this.web3.eth.sendSignedTransaction(signedTransaction.rawTransaction);
             if (this.receipts) {
                 result
-                    .then((receipt) =>  {
+                    .then((receipt) => {
                         console.log(colorize('✔ Transaction succeed.', 'green'));
                         console.log(receipt);
-                })
+                    })
                     .catch((err) => {
                         if (err.receipt) {
                             console.log(colorize('✖ Transaction reverted.', 'red'));
@@ -633,7 +634,7 @@ class W {
                         } else {
                             console.log(err);
                         }
-                });
+                    });
             }
             return result;
         } else {
@@ -670,23 +671,23 @@ class W {
                 }
             } else {
                 if (lastNonceByAddress[transaction.from]) {
-                    transaction.nonce =  lastNonceByAddress[transaction.from] + 1;
+                    transaction.nonce = lastNonceByAddress[transaction.from] + 1;
                 } else {
                     if (!currentNonceByAddress[transaction.from]) {
                         currentNonceByAddress[transaction.from] = await this.nonce(transaction.from);
                     }
                     transaction.nonce = currentNonceByAddress[transaction.from]
                 }
-                
+
             }
             lastNonceByAddress[transaction.from] = transaction.nonce;
             signedTransactions[i] = await this.web3.eth.accounts.signTransaction(transaction, fromAccount.key);
         }
-        
+
         let confirmation = true;
         if (this.recaps || this.confirmations) {
-            for (let i = 0; i < preparedTransactions.length; i++){
-                console.log(colorize(`• Transaction n°${i+1} to be sent :`, 'cyan'))
+            for (let i = 0; i < preparedTransactions.length; i++) {
+                console.log(colorize(`• Transaction n°${i + 1} to be sent :`, 'cyan'))
                 console.log(preparedTransactions[i]);
                 console.log();
             }
@@ -700,8 +701,8 @@ class W {
 
         if (confirmation) {
             for (let i = 0; i < signedTransactions.length; i++) {
-                let resolve = resolves && resolves[i] ? resolves[i] : () => {};
-                let reject = rejects && rejects[i] ? rejects[i] : () => {};
+                let resolve = resolves && resolves[i] ? resolves[i] : () => { };
+                let reject = rejects && rejects[i] ? rejects[i] : () => { };
                 this.web3.eth.sendSignedTransaction(signedTransactions[i].rawTransaction)
                     .then(resolve)
                     .catch(reject);
@@ -745,7 +746,7 @@ class W {
      * specified, it will return the amount of ether.
      * @returns {Promise} Balance of the account.
      */
-    async balance(account, token){
+    async balance(account, token) {
         this._web3Assertion();
         let address = this._aliasesHandler(account);
         assertRed(
@@ -791,10 +792,10 @@ class W {
         let input = {
             language: 'Solidity',
             sources: {},
-            settings: {outputSelection: {'*': {'*': ['*']}}}
+            settings: { outputSelection: { '*': { '*': ['*'] } } }
         };
         if (optimization) {
-            input.settings.optimizer = {runs:optimization};
+            input.settings.optimizer = { runs: optimization };
         }
 
         for (let folder of folders) {
@@ -807,10 +808,10 @@ class W {
 
         for (let i = 0; i < filesPaths.length; i++) {
             try {
-                let data = fs.readFileSync(filesPaths[i], {encoding:'utf8', flag:'r'});
+                let data = fs.readFileSync(filesPaths[i], { encoding: 'utf8', flag: 'r' });
                 let baseName = path.win32.basename(filesPaths[i]);
                 if (baseName) {
-                    input.sources[baseName] = {content:data};
+                    input.sources[baseName] = { content: data };
                 } else {
                     success = false;
                 }
@@ -823,7 +824,7 @@ class W {
         assert(success);
 
         let output = JSON.parse(solc.compile(JSON.stringify(input)));
-        
+
         if (output.errors) {
             for (let error of output.errors) {
                 if (error.severity === 'warning') {
@@ -834,7 +835,7 @@ class W {
                     console.log(colorize(error.formattedMessage, 'red'));
                     success = false;
                 }
-                
+
             }
         }
 
@@ -850,7 +851,7 @@ class W {
                 if (contractFile) break;
             }
         }
-        
+
         let outputContract = output.contracts[contractFile];
         let bytecode = outputContract[contractName].evm.bytecode.object;
         let abi = outputContract[contractName].abi;
@@ -890,10 +891,10 @@ class W {
             let result = this.web3.eth.sendSignedTransaction(signedTransaction.rawTransaction);
             if (this.receipts) {
                 result
-                    .then((receipt) =>  {
+                    .then((receipt) => {
                         console.log(colorize('✔ Contract deployed.', 'green'));
                         console.log(receipt);
-                })
+                    })
                     .catch((err) => {
                         if (err.receipt) {
                             console.log(colorize('✖ Deployment reverted.', 'red'));
@@ -901,7 +902,7 @@ class W {
                         } else {
                             console.log(err);
                         }
-                });
+                    });
             }
             let receipt = await result;
             return receipt.contractAddress;
@@ -986,14 +987,14 @@ class W {
      * @returns {Promise<int>} Number of the current block.
      */
     async currentBlock() {
-        this._web3Assertion(); 
+        this._web3Assertion();
         return this.web3.eth.getBlockNumber();
     }
 
     /**
      * Prints the current block number.
      */
-     async printCurrentBlock() {
+    async printCurrentBlock() {
         this.currentBlock().then(console.log);
     }
 
