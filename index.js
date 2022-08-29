@@ -409,8 +409,8 @@ class W {
     }
 
     /**
-     * Sets the block in whitch to perform all the next calls.
-     * @param {String} block The block in whitch to perform all the next calls.
+     * Sets the block in which to perform all the next calls.
+     * @param {String} block The block in which to perform all the next calls.
      */
     setBlockCall(block) {
         this.blockCall = block;

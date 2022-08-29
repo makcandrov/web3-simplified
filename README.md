@@ -16,7 +16,7 @@ npm install web3-simplified
 
 In order to use all the functions of this package, you will need to have the three `.json` files listed below in your current workspace, in which you will precise your RPCs, your addreses or the addresses of your contracts, and you will be able to give them aliases.
 
-The package will search for this files in your workspace, begining from the directory where your javascript is executed and then by going up one indentation. All your files can be at différent indentations.
+The package will search for this files in your workspace, begining from the directory where your javascript is executed and then by going up one indentation at time. All your files can be at different indentations.
 
 #### 1. A file for your providers: `w-providers.json`
 
@@ -63,7 +63,7 @@ In this file, you can give aliases to EOA addresses. If you want to make a trans
 
 In this files you can give aliases to the contracts you want to interact with. If the same contract is deployed on different networks, you can specify all its the addresses. It is usefull if you want to switch easily from testnet to mainnet. Usually, `w-contracts.json` and `w-accounts.json` come together.
 
-Eventually, your workspace can look like that:
+Eventually, your workspace can look like this:
 ```txt
 workspace/
 ├── arbitrage/
@@ -81,12 +81,51 @@ workspace/
 └── w-providers.json
 ```
 
-To use the `web3-simplified` in a file, it is now very simple, you will just have to import it as an object, and you can do everything from here!
+To use `web3-simplified` in a file, it is now very simple, you will just have to import the object `w`, and you can do everything from here!
+
+Utilisation example:
 
 ```javascript
 const w = require("web3-simplified");
 
 w.setProvider("ethereum", "public");
+
+async function main() {
+
+    // transfer 1 ETH from me to my friend
+    await w.transfer("me", "my-friend", 1);
+
+    // print my ETH balance in the terminal
+    printBalance("me");
+
+    // retrieve my WETH balance
+    let myWethBalance = await w.balance("me", "weth");
+
+    // get amountOut from the Uniswap router
+    let amountOut = (await w.call("uniswap-router", "getAmountsOut", [
+        ["uint256", myWethBalance],
+        ["address[]", ["weth", "wbtc"]]
+    ], "uint256[]"))[0];
+
+    // approve the router to spend our WETH tokens
+    await w.send("me", "weth", "approve", [
+        ["address", "uniswap-router"],
+        ["uint256", myWethBalance]
+    ], 0, 100000, 50);
+
+    // swap our WETH for WBTC
+    await w.send("me", "uniswap-router", "swapExactTokensForTokens", [
+        ["uint256", myWethBalance],
+        ["uint256", amountOut],
+        ["addres[]", ["weth", "wbtc"]],
+        ["address", "me"],
+        ["deadline", Math.floor(Date.now() / 1000) + 1000]
+    ], 0, 250000, 50);
+
+    )
+}
+
+main();
 ```
 
 ### Settings
@@ -106,19 +145,47 @@ Many settings are available, that you can change directly from your javascript f
 #### **setBlockCall**
 
 ```javascript
-setBlockCall(block);
+setBlockCall(block)
 ```
 
-Sets the block in whitch to perform all the next calls.
+Sets the block in which to perform all the next calls.
 
 ##### **Parameters**
 
-- `block` — The block in whitch to perform all the next calls.
+- `block` — The block in which to perform all the next calls.
 
 ##### **Example**
 
 ```javascript
-w.setBlockCall(10000000);
+let myBalance = [];
+let myNFTBalance = [];
+
+const firstBlock = 10_000_000;
+const lastBlock = 15_000_000;
+const blockStep = 250_000;
+let blocks = []
+
+for (let block = firstBlock; i <= lastBlock; block += blockStep) {
+    // set the block for the future calls
+    setBlockCall(block);
+
+    blocks.push(block);
+    myBalance.push(
+        // this balance will be taken at the block `block`
+        await w.balance("me");
+    );
+    myNFTBalance.push(
+        // this number of NFTs will be taken at the block `block`
+        await w.call("nft", "balanceOf", ["address", "me"], "uint256");
+    )
+}
+
+// you can now plot them with the `plot` function of your choice
+plot(blocks, myBalance)
+plot(blocks, myNFTBalance)
+
+// reset the block number for the next calls
+w.setBlockCall("latest");
 ```
 ---
 
