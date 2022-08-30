@@ -42,7 +42,7 @@ In this file, you will sort your RPCs by network, and you can give them the name
     "key": "0x"
 },
 "my-friend": {
-    "public": "0x"
+    "address": "0x"
 }
 ```
 
